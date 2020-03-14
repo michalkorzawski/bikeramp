@@ -20,6 +20,9 @@ gem 'sidekiq', '~> 6.0', '>= 6.0.5'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
+# Money (value) objects
+gem 'money-rails', '~> 1.13', '>= 1.13.3'
+
 gem 'bugsnag', '~> 6.13'
 
 # Reduces boot times through caching; required in config/boot.rb
