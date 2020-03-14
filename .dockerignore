@@ -1,0 +1,47 @@
+# Misc
+**/.env
+**/.env.template
+**/*.md
+**/.editorconfig
+**/*.apib
+
+# Git
+**/.git
+**/.gitignore
+**/.gitattributes
+**/.git-hooks
+
+# Docker
+/docker-compose.yml
+/Dockerfile
+/.dockerignore
+/docker-entrypoint.sh
+
+# Ruby
+/.bundle
+/vendor/bundle
+/.rvmrc
+**/.byebug_history
+
+# Rails
+**/.rspec
+**/*.orig
+**/*.rbc
+**/capybara-*.html
+**/pickle-email-*.html
+**/rerun.txt
+/.rubocop.yml
+/config/initializers/secret_token.rb
+/config/master.key
+/coverage/
+/log
+/public/assets
+/public/packs
+/public/packs-test
+/public/system
+/spec/tmp
+/storage
+/tmp
+
+# MacOS
+**/.DS_Store

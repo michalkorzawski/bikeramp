@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:11.5-alpine
+    env_file: .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  web:
+    build: .
+    env_file: .env
+    entrypoint: /bikeramp/src/docker-compose/web-entrypoint.sh
+    command: rails s -p 3000 -b '0.0.0.0'
+    build:
+      context: .
+      args:
+        # Install development and test gems
+        BUNDLE_WITHOUT: ""
+        # Setup container user and group ids to match the host user
+        APP_USER_ID: "${USER_ID:-1000}"
+        APP_GROUP_ID: "${GROUP_ID:-1000}"
+    volumes:
+      - .:/bikeramp/src
+      - bundle_cache:/bikeramp/bundle
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+volumes:
+  bundle_cache:
+  db_data:

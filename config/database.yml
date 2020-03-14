@@ -1,0 +1,22 @@
+default: &default
+  adapter: postgresql
+  username: <%= ENV['POSTGRES_USER'] %>
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS') { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  host: <%= ENV['DATABASE_HOST'].presence || 'db' %>
+  database: bikeramp_development
+
+test:
+  <<: *default
+  host: <%= ENV['DATABASE_HOST'].presence || 'db' %>
+  database: bikeramp_test
+
+production:
+  <<: *default
+  username: <%= ENV['POSTGRES_USER'] %>
+  host: <%= ENV['DATABASE_HOST'].presence || 'db' %>
+  database: <%= ENV['POSTGRES_DB'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
