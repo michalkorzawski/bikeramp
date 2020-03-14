@@ -8,6 +8,19 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  redis:
+    image: redis:5.0.8-alpine
+    command: redis-server
+    ports:
+      - "6379:6379"
+  sidekiq:
+    build: .
+    env_file: .env
+    volumes:
+      - .:/bikeramp/src
+    command: sidekiq -C config/sidekiq.yml
+    depends_on:
+      - redis
   web:
     build: .
     env_file: .env
@@ -28,6 +41,8 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - redis
+      - sidekiq
 
 volumes:
   bundle_cache:
