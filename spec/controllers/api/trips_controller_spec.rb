@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe Api::TripsController do
   describe '#create' do
+    let!(:courier) { create(:courier) }
 
     let(:params) do
       {

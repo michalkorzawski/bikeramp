@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe Trip do
+  let(:courier) { create(:courier) }
 
   let(:trip_attr) do
     {
@@ -8,6 +9,7 @@ describe Trip do
       destination_address: destination_address,
       price: price,
       date: date,
+      courier_id: courier_id
     }
   end
 
@@ -15,6 +17,7 @@ describe Trip do
   let(:destination_address) { 'Plac Dąbrowskiego 2, Warszawa, Polska' }
   let(:price) { '12' }
   let(:date) { '2018-04-03' }
+  let(:courier_id) { courier.id }
 
   context 'success' do
     context 'all attr' do
@@ -107,6 +110,18 @@ describe Trip do
         end
       end # with empty date
     end # without date
+
+    context 'without courier' do
+      let(:courier_id) { nil }
+
+      it do
+        expect{ Trip.create!(**trip_attr)}
+          .to raise_error(
+            ActiveRecord::RecordInvalid,
+            'Validation failed: Courier must exist'
+          )
+      end
+    end # without courier
 
     context 'with negative price' do
       let(:price) { '-10' }
