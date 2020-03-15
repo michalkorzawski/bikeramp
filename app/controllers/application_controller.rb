@@ -11,7 +11,7 @@ class ApplicationController < ActionController::API
   end
 
   # I follow the "No login required" rule by pretending that we have
-  # the current_courier whos id was acquired by decoding authentication
+  # the current_courier whos id was acquired by decoding authentication
   # bearer token.
   def current_courier
     Courier.first
