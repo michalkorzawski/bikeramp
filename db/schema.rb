@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_15_161923) do
+ActiveRecord::Schema.define(version: 2020_03_15_163927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 2020_03_15_161923) do
     t.datetime "date", null: false
     t.integer "trip_counter", default: 0
     t.index ["courier_id"], name: "index_daily_stats_on_courier_id"
+    t.index ["date"], name: "index_daily_stats_on_date"
   end
 
   create_table "trips", force: :cascade do |t|
