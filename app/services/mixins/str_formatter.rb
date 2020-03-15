@@ -13,6 +13,8 @@ module Mixins
     end
 
     def meters_to_km(meters)
+      return '0km' if meters.zero?
+
       String(format_number(meters / 1000.0)) + 'km'
     end
 
@@ -22,12 +24,14 @@ module Mixins
                             strip_insignificant_zeros: true)
     end
 
-    def price_format(price)
-      price.format(
-        symbol: false,
-        with_currency: true,
-        no_cents_if_whole: true
-      ).gsub(' ', '')
+    def price_format(money_obj)
+      money_obj = Money.new(money_obj) if money_obj.zero?
+
+      money_obj.format.gsub(' ', '')
+    end
+
+    def day_format(date)
+      date.strftime("%b, #{date.day.ordinalize}")
     end
   end
 end
