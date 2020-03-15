@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Trip < ApplicationRecord
+  belongs_to :courier
+
   monetize :price_cents
 
   validates :start_address, presence: true

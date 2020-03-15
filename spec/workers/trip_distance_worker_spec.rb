@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 describe TripDistanceWorker do
-  let(:trip) { create(:trip, distance: 0) }
+  let(:courier) { create(:courier) }
+  let(:trip) { create(:trip, distance: 0, courier_id: courier.id) }
   let(:distance) { 1000 }
 
   let(:call) { described_class.new.perform(trip.id) }

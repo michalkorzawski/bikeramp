@@ -3,7 +3,7 @@
 module Api
   class TripsController < ApplicationController
     def create
-      Trip.create!(trip_attrs).tap do |trip|
+      current_courier.trips.create!(trip_attrs).tap do |trip|
         TripDistanceWorker.perform_async(trip.id)
       end
 
