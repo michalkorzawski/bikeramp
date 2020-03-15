@@ -46,6 +46,8 @@ group :development do
 end
 
 group :test do
+  gem 'webmock', '~> 3.8', '>= 3.8.3'
+  gem 'database_cleaner-active_record', '~> 1.8'
   gem 'rspec-rails', '~> 3.9', '>= 3.9.1'
   gem 'factory_bot_rails', '~> 5.1', '>= 5.1.1'
 end
