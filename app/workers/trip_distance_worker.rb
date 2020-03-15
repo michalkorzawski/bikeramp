@@ -13,6 +13,7 @@ class TripDistanceWorker
     )
 
     trip.update!(distance: Integer(distance)) if distance
+    update_stats(trip: trip)
   end
 
   private
@@ -22,5 +23,9 @@ class TripDistanceWorker
       start_address: start_address,
       destination_address: destination_address
     ).call
+  end
+
+  def update_stats(trip:)
+    TripStatsUpdater.new(trip: trip).call
   end
 end
