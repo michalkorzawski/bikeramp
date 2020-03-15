@@ -12,12 +12,18 @@ gem 'puma', '~> 4.1'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.7'
 # Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 4.0'
+gem 'redis', '~> 4.0'
+gem 'sidekiq', '~> 6.0', '>= 6.0.5'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
+
+# Money (value) objects
+gem 'money-rails', '~> 1.13', '>= 1.13.3'
+
+gem 'bugsnag', '~> 6.13'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
@@ -40,6 +46,8 @@ group :development do
 end
 
 group :test do
+  gem 'webmock', '~> 3.8', '>= 3.8.3'
+  gem 'database_cleaner-active_record', '~> 1.8'
   gem 'rspec-rails', '~> 3.9', '>= 3.9.1'
   gem 'factory_bot_rails', '~> 5.1', '>= 5.1.1'
 end

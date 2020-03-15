@@ -29,9 +29,16 @@ module Bikeramp
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
+    config.autoload_path = %w{
+      app/serializers
+    }
+
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # Use sidekiq as default queue adapeter.
+    config.active_job.queue_adapter = :sidekiq
   end
 end
