@@ -29,7 +29,7 @@
   `docker-compose run --rm web rubocop -a` to run rubocop in the auto-correct mode
 
 ## Debugging
-
+ 
   You need to run rails server with ports expose to the host. It can by achieved by --service-ports flag.
 
   `docker-compose run --service-ports web`
