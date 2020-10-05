@@ -40,6 +40,10 @@ jobs:
       if: steps.cache-docker-image.outputs.cache-hit == 'true'
       run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
 
+    - name: Generate dotenv
+      id: generate-dotenv
+      run: cp .env.template .env
+
     - name: Docker build
       id: docker-build
       run: docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 base
@@ -50,8 +54,8 @@ jobs:
       run: mkdir -p ${IMAGE_CACHE_DIR}
         && docker image tag ${APP_IMAGE_TAG} ${APP_IMAGE_CACHE_TAG}
         && docker image save -o ${IMAGE_CACHE_DIR}/image.tar ${APP_IMAGE_CACHE_TAG}
-  
-        
+
+
   test-app:
     needs: image-cache-or-build
     strategy:
@@ -63,7 +67,7 @@ jobs:
       ARG_RUBY_VERSION: ${{ matrix.ruby }}
       GEMS_CACHE_DIR: /tmp/cache/bundle
       GEMS_CACHE_KEY: cache-gems
-      
+
     steps:
     - name: Check out code
       id: checkout
@@ -72,15 +76,6 @@ jobs:
     - name: Generate dotenv
       id: generate-dotenv
       run: cp .env.template .env
-
-    - name: Cache docker image
-      id: cache-docker-image
-      uses: actions/cache@v1
-      with:
-        path: ${{ env.IMAGE_CACHE_DIR }}
-        key: ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-${{ hashFiles('Dockerfile') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-
 
     - name: Docker load
       id: docker-load
