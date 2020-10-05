@@ -7,8 +7,6 @@ services:
       cache_from:
         - rails6api-development-cache
     image: rails6api-development:0.1.0
-    tmpfs:
-      - /tmp
     env_file: .env
 
   db:
