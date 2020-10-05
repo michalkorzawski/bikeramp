@@ -23,6 +23,11 @@ services:
       - redis
   web:
     build: .
+    cache_from:
+      - rails6api-development-cache
+    image: rails6api-development:0.1.0
+    tmpfs:
+      - /tmp
     env_file: .env
     entrypoint: /bikeramp/src/docker-compose/web-entrypoint.sh
     build:

@@ -46,7 +46,7 @@ jobs:
 
     - name: Docker build
       id: docker-build
-      run: docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 base
+      run: docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 web
 
     - name: Docker tag and save
       id: docker-tag-save
@@ -84,7 +84,7 @@ jobs:
 
     - name: Docker compose build
       id: docker-build
-      run: docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 base
+      run: docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 web
 
     - name: Cache bundle gems
       id: cache-bundle-gems
@@ -97,4 +97,4 @@ jobs:
 
     - name: Setup and Run test
       id: setup-and-run-test
-      run: docker-compose run --rm console bash -c "bundle install && rails db:prepare && rspec"
+      run: docker-compose run --rm web bash -c "bundle install && rails db:create db:migrate && rspec"
