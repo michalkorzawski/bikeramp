@@ -31,7 +31,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ${{ env.IMAGE_CACHE_DIR }}
-        key: ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-${{ hashFiles('Dockerfile') }}
+        key: ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-
 
@@ -82,7 +82,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ${{ env.IMAGE_CACHE_DIR }}
-        key: ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-${{ hashFiles('Dockerfile') }}
+        key: ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-
 
