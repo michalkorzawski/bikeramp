@@ -1,0 +1,105 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+env:
+  APP_IMAGE_TAG: rails6api-development:0.1.0
+  APP_IMAGE_CACHE_TAG: rails6api-development-cache
+  IMAGE_CACHE_DIR: /tmp/cache/docker-image
+  IMAGE_CACHE_KEY: cache-image
+
+
+jobs:
+  image-cache-or-build:
+    strategy:
+      matrix:
+        ruby: ["2.7.0"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      ARG_RUBY_VERSION: ${{ matrix.ruby }}
+
+    steps:
+    - name: Check out code
+      id: checkout
+      uses: actions/checkout@v2
+
+    - name: Cache docker image
+      id: cache-docker-image
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.IMAGE_CACHE_DIR }}
+        key: ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-${{ hashFiles('Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-
+
+    - name: Docker load
+      id: docker-load
+      if: steps.cache-docker-image.outputs.cache-hit == 'true'
+      run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
+
+    - name: Docker build
+      id: docker-build
+      run: docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 base
+
+    - name: Docker tag and save
+      id: docker-tag-save
+      if: steps.cache-docker-image.outputs.cache-hit != 'true'
+      run: mkdir -p ${IMAGE_CACHE_DIR}
+        && docker image tag ${APP_IMAGE_TAG} ${APP_IMAGE_CACHE_TAG}
+        && docker image save -o ${IMAGE_CACHE_DIR}/image.tar ${APP_IMAGE_CACHE_TAG}
+  
+        
+  test-app:
+    needs: image-cache-or-build
+    strategy:
+      matrix:
+        ruby: ["2.7.0"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      ARG_RUBY_VERSION: ${{ matrix.ruby }}
+      GEMS_CACHE_DIR: /tmp/cache/bundle
+      GEMS_CACHE_KEY: cache-gems
+      
+    steps:
+    - name: Check out code
+      id: checkout
+      uses: actions/checkout@v2
+
+    - name: Generate dotenv
+      id: generate-dotenv
+      run: cp .env.template .env
+
+    - name: Cache docker image
+      id: cache-docker-image
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.IMAGE_CACHE_DIR }}
+        key: ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-${{ hashFiles('Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.IMAGE_CACHE_KEY }}-${{ matrix.ruby }}-
+
+    - name: Docker load
+      id: docker-load
+      if: steps.cache-docker-image.outputs.cache-hit == 'true'
+      run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
+
+    - name: Docker compose build
+      id: docker-build
+      run: docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 base
+
+    - name: Cache bundle gems
+      id: cache-bundle-gems
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.GEMS_CACHE_DIR }}
+        key: ${{ runner.os }}-${{ env.GEMS_CACHE_KEY }}-${{ matrix.ruby }}-${{ hashFiles('Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.GEMS_CACHE_KEY }}-${{ matrix.ruby }}-
+
+    - name: Setup and Run test
+      id: setup-and-run-test
+      run: docker-compose run --rm console bash -c "bundle install && rails db:prepare && rspec"
